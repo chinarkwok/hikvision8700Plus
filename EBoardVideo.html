@@ -68,36 +68,36 @@
 </html>
 <script>
     var curInspectDevIdes = [];  //当前监控的视频ID列表
-    var eBoardID= GetQueryString("eBoardID");
+    //var eBoardID= GetQueryString("eBoardID");
 
-    //视频树节点数据
-    // var zNodes = [];
-    // $.ajaxSettings.async = false;
-    // $.get(config.webBase + "/EBoardVideoPassageway?eBoardID="+eBoardID, function (data, status) {
-    //     zNodes = data;
-    // });
+    视频树节点数据
+    var zNodes = [];
+    $.ajaxSettings.async = false;
+    $.get(config.webBase + "/EBoardVideoPassageway?eBoardID="+eBoardID, function (data, status) {
+        zNodes = data;
+    });
 
-    zNodes = [{
-        "iconSkin": "tree_camera_active",
-        "name": "前置摄像头",
-        "pId": "-1",
-        "id": "3",
-        "dvrselfId": "5600051266424b6588dcdd9a14dfd1a4"
-    }, {
-        "iconSkin": "tree_camera_active",
-        "name": "后置摄像头",
-        "pId": "-1",
-        "id": "4",
-        "dvrselfId": "719e7bfa3f42426d82a5169ba57d9ecc"
-    }, {
-        "iconSkin": "tree_dir_active",
-        "name": "摄像头列表",
-        "pId": "-9999",
-        "id": "-1",
-        "open": "true",
-        "appKey": "25471182",
-        "secret": "eVHiDVBJ1A3xA8DxB9D8"
-    }];
+    // zNodes = [{
+    //     "iconSkin": "tree_camera_active",
+    //     "name": "前置摄像头",
+    //     "pId": "-1",
+    //     "id": "3",
+    //     "dvrselfId": "5600051266424b6588dcdd9a14dfd1a4"
+    // }, {
+    //     "iconSkin": "tree_camera_active",
+    //     "name": "后置摄像头",
+    //     "pId": "-1",
+    //     "id": "4",
+    //     "dvrselfId": "719e7bfa3f42426d82a5169ba57d9ecc"
+    // }, {
+    //     "iconSkin": "tree_dir_active",
+    //     "name": "摄像头列表",
+    //     "pId": "-9999",
+    //     "id": "-1",
+    //     "open": "true",
+    //     "appKey": "25471182",
+    //     "secret": "eVHiDVBJ1A3xA8DxB9D8"
+    // }];
     var setting = {
         data: {
             key: {
