@@ -1,0 +1,286 @@
+/* icons */
+[class^="cus-"],
+[class*=" cus-"] {
+    display: inline-block;
+    width: 17px;
+    height: 16px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../images/icons/clouds.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+}
+
+[class^="cus-"]:last-child,
+[class*=" cus-"]:last-child {
+    *margin-left: 0;
+}
+
+.cus-search {
+    height: 19px;
+    width: 19px;
+    background-position: 0 0;
+}
+
+.cus-system {
+    height: 19px;
+    width: 19px;
+    background-position: 0 -19px;
+}
+
+.cus-star_on {
+    height: 19px;
+    width: 19px;
+    background-position: 0 -38px;
+}
+
+.cus-star_off {
+    height: 19px;
+    width: 19px;
+    background-position: 0 -57px;
+}
+
+.cus-lock_off {
+    height: 17px;
+    width: 19px;
+    background-position: 0 -76px;
+}
+
+.cus-lock_on {
+    height: 17px;
+    width: 19px;
+    background-position: 0 -93px;
+}
+
+.cus-screen_on_9 {
+    height: 20px;
+    width: 20px;
+    background-position: 0 -110px;
+}
+
+.cus-screen_off_1 {
+    height: 20px;
+    width: 20px;
+    background-position: 0 -130px;
+}
+
+.cus-screen_off_4 {
+    height: 20px;
+    width: 20px;
+    background-position: 0 -150px;
+}
+
+/* icons */
+[class^="temp-"],
+[class*=" temp-"] {
+    display: inline-block;
+    width: 17px;
+    height: 16px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../images/icons/video_single.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+}
+
+[class^="temp-"]:last-child,
+[class*=" temp-"]:last-child {
+    *margin-left: 0;
+}
+
+.temp-star_on {
+    height: 19px;
+    width: 19px;
+    background-position: 0 0;
+}
+
+.temp-lock_off {
+    height: 17px;
+    width: 19px;
+    background-position: 0 -19px;
+}
+
+.temp-lock_on {
+    height: 17px;
+    width: 19px;
+    background-position: 0 -36px;
+}
+
+.temp-event_cut {
+    height: 19px;
+    width: 80px;
+    background-position: 0 -53px;
+}
+
+.temp-play_back {
+    height: 19px;
+    width: 80px;
+    background-position: 0 -72px;
+}
+
+/* icons */
+[class^="sysTab-"],
+[class*=" sysTab-"] {
+    display: inline-block;
+    width: 17px;
+    height: 16px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../images/icons/tab_close.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+}
+
+[class^="sysTab-"]:last-child,
+[class*=" sysTab-"]:last-child {
+    *margin-left: 0;
+}
+
+.sysTab-140FG95154 {
+    height: 13px;
+    width: 15px;
+    background-position: 0 0;
+}
+
+.sysTab-140FG95151-51 {
+    height: 16px;
+    width: 16px;
+    background-position: 0 -13px;
+}
+
+.sysTab-140FG95155-52 {
+    height: 17px;
+    width: 17px;
+    background-position: 0 -29px;
+}
+
+.sysTab-140FG95153-52 {
+    height: 25px;
+    width: 25px;
+    background-position: 0 -46px;
+}
+
+.sysTab-140FG95151-52 {
+    height: 31px;
+    width: 30px;
+    background-position: 0 -71px;
+}
+
+
+
+.btn > .screen_on_snapshot {
+    background-image: url("../images/icon-video/snapshot.png");
+    width: 21px;
+    height: 21px;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn:hover > .screen_on_snapshot, .btn:focus > .screen_on_snapshot, .btn:active > .screen_on_snapshot {
+    cursor: pointer;
+    /* background-image: url("../images/icon-video/single_screen_w.png");*/
+}
+.btn > .screen_on_videorecord {
+    background-image: url("../images/icon-video/videoRecord_end.png");
+    width: 21px;
+    height: 21px;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn:hover > .screen_on_videorecord, .btn:focus > .screen_on_videorecord, .btn:active > .screen_on_videorecord {
+    cursor: pointer;
+     background-image: url("../images/icon-video/videoRecord_start.png");
+}
+/*设置三个按钮初始颜色*/
+#btn_snapshot,#btn_videorecord {
+    background-color: #F4FDF6;
+    color: #3D4A53;
+    border-color: #CECDCD;
+    border-radius: 0px;
+}
+
+#btn_snapshot:hover, #btn_snapshot:focus, #btn_snapshot:active,
+#btn_videorecord:hover, #btn_videorecord:focus, #btn_videorecord:active{
+    background-color: #00AA76;
+    color: #fff;
+}
+
+/*设置分屏按钮样式*/
+.btn > .screen_on_1 {
+    background-image: url("../images/icon-video/single_screen.png");
+    width: 21px;
+    height: 21px;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn:hover > .screen_on_1, .btn:focus > .screen_on_1, .btn:active > .screen_on_1 {
+    cursor: pointer;
+    background-image: url("../images/icon-video/single_screen_w.png");
+}
+
+.btn > .screen_on_4 {
+    background-image: url("../images/icon-video/four_screen.png");
+    width: 21px;
+    height: 21px;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn:hover > .screen_on_4, .btn:focus > .screen_on_4, .btn:active > .screen_on_4 {
+    cursor: pointer;
+    background-image: url("../images/icon-video/four_screen_w.png");
+}
+
+.btn > .screen_on_9 {
+    background-image: url("../images/icon-video/nine_screen.png");
+    width: 21px;
+    height: 21px;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn:hover > .screen_on_9, .btn:focus > .screen_on_9, .btn:active > .screen_on_9 {
+    cursor: pointer;
+    background-image: url("../images/icon-video/nine_screen_w.png");
+}
+
+/*设置三个按钮初始颜色*/
+#btn_index_video_one, #btn_index_video_four, #btn_index_video_nine {
+    background-color: #F4FDF6;
+    color: #3D4A53;
+    border-color: #CECDCD;
+    border-radius: 0px;
+}
+
+#btn_index_video_one:hover, #btn_index_video_one:focus, #btn_index_video_one:active,
+#btn_index_video_four:hover, #btn_index_video_four:focus, #btn_index_video_four:active,
+#btn_index_video_nine:hover, #btn_index_video_nine:focus, #btn_index_video_nine:active {
+    background-color: #00AA76;
+    color: #fff;
+}
+
+.ztree li span.button.tree_dir_active_ico_open {
+    margin-right: 2px;
+    background: url("../images/icon-video/tree_dir_active.png") no-repeat scroll 0 0 transparent;
+    vertical-align: top;
+    *vertical-align: middle
+}
+
+.ztree li span.button.tree_dir_active_ico_close {
+    margin-right: 2px;
+    background: url("../images/icon-video/tree_dir_active.png") no-repeat scroll 0 0 transparent;
+    vertical-align: top;
+    *vertical-align: middle
+}
+
+.ztree li span.button.tree_camera_active_ico_docu {
+    margin-right: 2px;
+    background: url("../images/icon-video/tree_camera_active.png") no-repeat scroll 0 0 transparent;
+    vertical-align: top;
+    *vertical-align: middle
+}

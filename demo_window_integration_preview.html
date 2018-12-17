@@ -1,0 +1,492 @@
+<!doctype html>
+<html>
+<head>
+    <title>预览Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="Expires" content="0" />
+</head>
+<style>
+html, body {
+    padding: 0;
+    margin: 0;
+}
+.playWnd {
+    margin: 50px 0 0 100px;
+    width: 600px;
+    height: 400px;
+    border: 1px solid red;
+}
+.cbInfoDiv {
+    float: left;
+    width: 500px;
+    margin-left: 16px;
+    border:1px solid #7F9DB9;
+}
+.cbInfo {
+    height: 200px;
+    padding: 5px;
+    border: 1px solid #7F9DB9;
+    overflow: auto;
+    word-break: break-all;
+}
+.operate {
+    margin-top: 24px;
+}
+.operate::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.operate .btns {
+    height: 32px;
+}
+.module {
+    float: left;
+    width: 340px;
+    min-height: 320px;
+    margin-left: 16px;
+    padding: 16px 8px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+}
+.module .item {
+    margin-bottom: 4px;
+}
+.module .label {
+    width: 150px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    text-align: right;
+}
+.module input[type="text"],
+.module select {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0;
+    width: 150px;
+    min-height: 20px;
+}
+.module .btn {
+    min-width: 80px;
+    min-height: 24px;
+    margin-top: 16px;
+    margin-left: 158px;
+}
+</style>
+<body>
+    <div id="playWnd" class="playWnd"></div>
+    <div id="operate" class="operate">
+        <div class="module">
+            <div class="item"><span class="label">appkey:</span><input id="appkey" type="text" value="25471182"></div>
+            <div class="item"><span class="label">secret:</span><input id="secret" type="text" value="eVHiDVBJ1A3xA8DxB9D8"></div>
+            <div class="item"><span class="label">API网关IP地址:</span><input id="ip" type="text" value="10.16.101.32"></div>
+            <div class="item"><span class="label">API网关端口:</span><input id="port" type="text" value="80"></div>
+            <div class="item"><span class="label">抓图存储路径:</span><input id="snapDir" type="text" value="D:\SnapDir"></div>
+            <div class="item">
+                <span class="label">初始化布局:</span>
+                <select id="layout" value="2x2">
+                    <option value="1x1">1x1</option>
+                    <option value="2x2" selected>2x2</option>
+                    <option value="3x3">3x3</option>
+                    <option value="4x4">4x4</option>
+                </select>
+            </div>
+            <div class="item">
+                <span class="label">加密字段:</span>
+                <div style="display: inline-block; vertical-align: top;">
+                    <label><input type="checkbox" value="secret" disabled checked>secret</label><br>
+                    <label><input class="encryptedFields" type="checkbox" value="appkey">appkey</label><br>
+                    <label><input class="encryptedFields" type="checkbox" value="ip">ip</label><br>
+                    <label><input class="encryptedFields" type="checkbox" value="snapDir">抓图路径</label><br>
+                    <label><input class="encryptedFields" type="checkbox" value="layout">布局</label>
+                </div>
+            </div>
+            <div class="item"><button id="init" class="btn">初始化</button></div>
+        </div>
+        <div class="module">
+            <div class="item"><span class="label">监控点编号：</span><input id="cameraIndexCode" type="text" value="5600051266424b6588dcdd9a14dfd1a4"></div>
+            <div class="item">
+                <span class="label">主子码流标识：</span>
+                <select id="streamMode" value="0">
+                    <option value="0">主码流</option>
+                    <option value="1">子码流</option>
+                </select>
+            </div>
+            <div class="item">
+                <span class="label">传输协议：</span>
+                <select id="transMode" value="1">
+                    <option value="1">TCP</option>
+                    <option value="0">UDP</option>
+                </select>
+            </div>
+            <div class="item">
+                <span class="label">是否启用GPU硬解：</span>
+                <select id="gpuMode" value="0">
+                    <option value="0">不启用</option>
+                    <option value="1">启用</option>
+                </select>
+            </div>
+            <div class="item"><button id="startPreview" class="btn">预览</button></div>
+            <div class="item"><button id="stopAllPreview" class="btn">停止全部预览</button></div>
+            <div class="item"><button id="uninit" class="btn">反初始化</button></div>
+        </div>
+        <fieldset class="cbInfoDiv">
+            <legend>返回值信息</legend>
+            <div id="cbInfo" class="cbInfo"></div>
+            <button id="clear">清空</button>
+        </fieldset>
+    </div>
+</body>
+<script src="jquery-1.12.4.min.js"></script>
+<script src="jsencrypt.min.js"></script>
+<script src="jsWebControl-1.0.0.min.js"></script>
+
+<script type="text/javascript">
+    var oWebControl = null;// 插件对象
+    var bIE = (!!window.ActiveXObject || 'ActiveXObject' in window);// 是否为IE浏览器
+    var pubKey = '';
+
+    var iLastCoverLeft = 0;
+    var iLastCoverTop = 0;
+    var iLastCoverRight = 0;
+    var iLastCoverBottom = 0;
+	var initCount = 0;
+
+    // 标签关闭
+    $(window).unload(function () {
+        uninit()
+
+        // 销毁
+        oWebControl.JS_RequestInterface({
+            funcName: "destroyWnd"
+        }).then(function (oData) {
+            showCBInfo(JSON.stringify(oData));
+        });
+
+        if (bIE) {
+            if (oWebControl != null) {
+                oWebControl.JS_Disconnect().then(function () {
+                    console.log("JS_Disconnect");
+                }, function () {});
+            }
+        } else{
+            if (oWebControl != null) {
+                oWebControl.JS_DestroyWnd().then(function () {
+                    console.log("JS_DestroyWnd");
+                }, function () {});
+                oWebControl.JS_StopService("window").then(function () {
+                    oWebControl.JS_Disconnect().then(function () {
+                        console.log("JS_Disconnect");
+                    }, function () {});
+                });
+            }
+        }
+    });
+
+    // 窗口resize
+    $(window).resize(function () {
+        if (oWebControl != null) {
+            oWebControl.JS_Resize(600, 400);
+            setWndCover();
+        }
+    });
+
+    // 滚动条scroll
+    $(window).scroll(function () {
+        if (oWebControl != null) {
+            oWebControl.JS_Resize(600, 400);
+            setWndCover();
+        }
+    });
+
+    // 设置窗口遮挡
+    function setWndCover() {
+        var iWidth = $(window).width();
+        var iHeight = $(window).height();
+        var oDivRect = $("#playWnd").get(0).getBoundingClientRect();
+
+        var iCoverLeft = (oDivRect.left < 0) ? Math.abs(oDivRect.left): 0;
+        var iCoverTop = (oDivRect.top < 0) ? Math.abs(oDivRect.top): 0;
+        var iCoverRight = (oDivRect.right - iWidth > 0) ? Math.round(oDivRect.right - iWidth) : 0;
+        var iCoverBottom = (oDivRect.bottom - iHeight > 0) ? Math.round(oDivRect.bottom - iHeight) : 0;
+
+        iCoverLeft = (iCoverLeft > 600) ? 600 : iCoverLeft;
+        iCoverTop = (iCoverTop > 400) ? 400 : iCoverTop;
+        iCoverRight = (iCoverRight > 600) ? 600 : iCoverRight;
+        iCoverBottom = (iCoverBottom > 400) ? 400 : iCoverBottom;
+
+        if (iLastCoverLeft != iCoverLeft) {
+            console.log("iCoverLeft: " + iCoverLeft);
+            iLastCoverLeft = iCoverLeft;
+            oWebControl.JS_SetWndCover("left", iCoverLeft);
+        }
+        if (iLastCoverTop != iCoverTop) {
+            console.log("iCoverTop: " + iCoverTop);
+            iLastCoverTop = iCoverTop;
+            oWebControl.JS_SetWndCover("top", iCoverTop);
+        }
+        if (iLastCoverRight != iCoverRight) {
+            console.log("iCoverRight: " + iCoverRight);
+            iLastCoverRight = iCoverRight;
+            oWebControl.JS_SetWndCover("right", iCoverRight);
+        }
+        if (iLastCoverBottom != iCoverBottom) {
+            console.log("iCoverBottom: " + iCoverBottom);
+            iLastCoverBottom = iCoverBottom;
+            oWebControl.JS_SetWndCover("bottom", iCoverBottom);
+        }
+    }
+	
+    // 初始化插件
+	function initPlugin () {
+		oWebControl = new WebControl({
+			szPluginContainer: "playWnd",
+			iServicePortStart: 15900,
+			iServicePortEnd: 15909,
+			cbConnectSuccess: function () {
+				setCallbacks();
+				
+
+				oWebControl.JS_StartService("window", {
+					dllPath: "./VideoPluginConnect.dll"
+					//dllPath: "./DllForTest-Win32.dll"
+				}).then(function () {
+					oWebControl.JS_CreateWnd("playWnd", 600, 400).then(function () {
+						console.log("JS_CreateWnd success");
+					});
+				}, function () {
+				
+				});
+			},
+			cbConnectError: function () {
+				console.log("cbConnectError");
+				oWebControl = null;
+				$("#playWnd").html("插件未启动，正在尝试启动，请稍候...");
+				WebControl.JS_WakeUp("VideoWebPlugin://");
+				initCount ++;
+				if (initCount < 3) {
+					setTimeout(function () {
+						initPlugin();
+					}, 3000)
+				} else {
+					$("#playWnd").html("插件启动失败，请检查插件是否安装！");
+				}
+			},
+			cbConnectClose: function () {
+				console.log("cbConnectClose");
+				oWebControl = null;
+			}
+		});
+	}
+	
+	initPlugin();
+
+  
+    
+
+    // 获取公钥
+    function getPubKey (callback) {
+        oWebControl.JS_RequestInterface({
+            funcName: "getRSAPubKey",
+            argument: JSON.stringify({
+                keyLength: 1024
+            })
+        }).then(function (oData) {
+            console.log(oData)
+            if (oData.responseMsg.data) {
+                pubKey = oData.responseMsg.data
+                callback()
+            }
+        })
+    }
+
+    // 设置窗口控制回调
+    function setCallbacks() {
+        oWebControl.JS_SetWindowControlCallback({
+            cbIntegrationCallBack: cbIntegrationCallBack
+        });
+    }
+
+    // 推送消息
+    function cbIntegrationCallBack(oData) {
+        showCBInfo(JSON.stringify(oData.responseMsg));
+    }
+
+    // RSA加密
+    function setEncrypt (value) {
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(pubKey);
+        return encrypt.encrypt(value);
+    }
+
+    // 初始化
+    $("#init").click(function () {
+        getPubKey(function () {
+            var appkey = $("#appkey").val();
+            var secret = setEncrypt($("#secret").val());
+            var ip = $("#ip").val();
+            var port = Number.parseInt($("#port").val());
+            var snapDir = $("#snapDir").val();
+            var layout = $("#layout").val();
+            var encryptedFields = ['secret'];
+            $(".encryptedFields").each(function (index, item) {
+                var $item = $(item);
+                if ($item.prop('checked')) {
+                    var value = $item.val();
+                    if (value !== 'secret') {
+                        encryptedFields.push(value);
+                    }
+                    
+                    // secret固定加密，其它根据用户勾选加密
+                    if (value == 'ip') {
+                        ip = setEncrypt(ip)
+                    }
+                    if (value == 'appkey') {
+                        appkey = setEncrypt(appkey)
+                    }
+                    if (value == 'snapDir') {
+                        snapDir = setEncrypt(snapDir)
+                    }
+                    if (value == 'layout') {
+                        layout = setEncrypt(layout)
+                    }
+                }
+            })
+            encryptedFields = encryptedFields.join(",");
+
+            if (!appkey) {
+                showCBInfo("appkey不能为空！", 'error');
+                return
+            }
+            if (!$("#secret").val()) {
+                showCBInfo("secret不能为空！", 'error');
+                return
+            }
+            if (!ip) {
+                showCBInfo("ip不能为空！", 'error');
+                return
+            }
+            if (!$("#port").val()) {
+                showCBInfo("端口不能为空！", 'error');
+                return
+            } else if (!/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/.test($("#port").val())) {
+                showCBInfo("端口填写有误！", 'error');
+                return
+            }
+            console.log({
+                appkey: appkey,
+                secret: secret,
+                ip: ip,
+                playMode: 0, // 预览
+                port: port,
+                snapDir: snapDir,
+                layout: layout,
+                encryptedFields: encryptedFields
+            })
+
+            oWebControl.JS_RequestInterface({
+                funcName: "init",
+                argument: JSON.stringify({
+                    appkey: appkey,
+                    secret: secret,
+                    ip: ip,
+                    playMode: 0, // 预览
+                    port: port,
+                    snapDir: snapDir,
+                    layout: layout,
+                    encryptedFields: encryptedFields
+                })
+            }).then(function (oData) {
+                showCBInfo(JSON.stringify(oData ? oData.responseMsg : ''));
+            });
+        })
+    });
+
+    // 视频预览
+    $("#startPreview").click(function () {
+        var cameraIndexCode  = $("#cameraIndexCode ").val();
+        var streamMode = +$("#streamMode").val();
+        var transMode = +$("#transMode").val();
+        var gpuMode = +$("#gpuMode").val();
+
+        if (!cameraIndexCode ) {
+            showCBInfo("监控点编号不能为空！", 'error');
+            return
+        }
+
+        oWebControl.JS_RequestInterface({
+            funcName: "startPreview",
+            argument: JSON.stringify({
+                cameraIndexCode : cameraIndexCode ,
+                streamMode: streamMode,
+                transMode: transMode,
+                gpuMode: gpuMode
+            })
+        }).then(function (oData) {
+            showCBInfo(JSON.stringify(oData ? oData.responseMsg : ''));
+        });
+    })
+    
+    // 停止预览
+    $("#stopAllPreview").click(function () {
+        oWebControl.JS_RequestInterface({
+            funcName: "stopAllPreview"
+        }).then(function (oData) {
+            showCBInfo(JSON.stringify(oData ? oData.responseMsg : ''));
+        });
+    })
+
+    // 反初始化
+    function uninit () {
+        oWebControl.JS_RequestInterface({
+            funcName: "uninit"
+        }).then(function (oData) {
+            showCBInfo(JSON.stringify(oData ? oData.responseMsg : ''));
+        });
+    }
+    $("#uninit").click(uninit)
+
+
+    // 显示回调信息
+    function showCBInfo(szInfo, type) {
+        if (type === 'error') {
+            szInfo = "<div style='color: red;'>" + dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss") + " " + szInfo + "</div>";
+        } else {
+            szInfo = "<div>" + dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss") + " " + szInfo + "</div>";
+        }
+        $("#cbInfo").html(szInfo + $("#cbInfo").html());
+    }
+
+    $("#clear").click(function() {
+        $("#cbInfo").html('');
+    })
+
+    // 格式化时间
+    function dateFormat(oDate, fmt) {
+        var o = {
+            "M+": oDate.getMonth() + 1, //月份
+            "d+": oDate.getDate(), //日
+            "h+": oDate.getHours(), //小时
+            "m+": oDate.getMinutes(), //分
+            "s+": oDate.getSeconds(), //秒
+            "q+": Math.floor((oDate.getMonth() + 3) / 3), //季度
+            "S": oDate.getMilliseconds()//毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (oDate.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+
+
+</script>
+</html>

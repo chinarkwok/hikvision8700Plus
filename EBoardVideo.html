@@ -1,0 +1,158 @@
+﻿<html lang="en" style="height: 100%">
+
+<head>
+    <meta charset="gbk">
+    <title>busMonitor</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <link href="bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="bootstrap/css/bootstrap-change.css" type="text/css" rel="stylesheet" />
+    <link href="css/cus-icons.css" type="text/css" rel="stylesheet" />
+    <link href="jquery-ztree/3.5.12/css/zTreeStyle/zTreeStyle.css" type="text/css" rel="stylesheet">
+    </script>
+    <script type="text/javascript" src="jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="jquery-ztree/3.5.12/js/jquery.ztree.core-3.5.js"></script>
+    <script src="jsencrypt.min.js"></script>
+    <script src="jsWebControl-1.0.0.min.js"></script>
+
+</head>
+<style>
+    .level0>span {
+        color: #008B8B;
+        font-size: 18px;
+    }
+
+    .level1>span {
+        font-size: 16px;
+    }
+
+    .playWnd {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<body style="width: 100%;background-color: #eaf1f8; overflow: hidden;">
+    <div class="container" style="width: 100%">
+        <div class="row">
+            <div class="col-sm-9" style="height: 100%;">
+                <div class="panel panel-primary" style="height: 100%">
+                    <div class="panel-body" style="height: 100%">
+                        <div id="vehicle_camera_window" style="height: 100%;">
+                            <div id="playWnd" class="playWnd"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3" style="height: 100%;margin-left: -20px">
+                <div class="panel panel-primary" style="height: 100%">
+                    <div class="panel-heading" style="margin-bottom: 5px">
+                        <h5>设备列表</h5>
+                    </div>
+                    <div class="panel-body">
+                        <div id="list" class="col-lg-12 panel panel-primary" style="width:96%; margin-left:2%;overflow:auto;min-height:100px;">
+                            <ul id="busVideo_tree" class="ztree" style="overflow:auto;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    var curInspectDevIdes = [];  //当前监控的视频ID列表
+    var eBoardID= GetQueryString("eBoardID");
+
+    //视频树节点数据
+    // var zNodes = [];
+    // $.ajaxSettings.async = false;
+    // $.get(config.webBase + "/EBoardVideoPassageway?eBoardID="+eBoardID, function (data, status) {
+    //     zNodes = data;
+    // });
+
+    zNodes = [{
+        "iconSkin": "tree_camera_active",
+        "name": "前置摄像头",
+        "pId": "-1",
+        "id": "3",
+        "dvrselfId": "5600051266424b6588dcdd9a14dfd1a4"
+    }, {
+        "iconSkin": "tree_camera_active",
+        "name": "后置摄像头",
+        "pId": "-1",
+        "id": "4",
+        "dvrselfId": "719e7bfa3f42426d82a5169ba57d9ecc"
+    }, {
+        "iconSkin": "tree_dir_active",
+        "name": "摄像头列表",
+        "pId": "-9999",
+        "id": "-1",
+        "open": "true",
+        "appKey": "25471182",
+        "secret": "eVHiDVBJ1A3xA8DxB9D8"
+    }];
+    var setting = {
+        data: {
+            key: {
+                title: "name"
+            },
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onDblClick: videoTreeOnDblClick
+        }
+    };
+    $.fn.zTree.init($("#busVideo_tree"), setting, zNodes);
+
+    //双击显示某视频
+    function videoTreeOnDblClick(event, treeId, treeNode) {
+        var channelId = treeNode.id;
+
+        if (curInspectDevIdes.length < 1 && $.inArray(channelId, curInspectDevIdes) == -1) {
+            curInspectDevIdes.push(channelId);
+            highLightTreeNodeById(channelId, true);
+            startPreview(treeNode.dvrselfId);
+            //开始播放
+        }
+        else if ($.inArray(channelId, curInspectDevIdes) > -1) {
+            highLightTreeNodeById(channelId, false);
+            curInspectDevIdes.splice($.inArray(channelId, curInspectDevIdes), 1);
+            oWebControl.JS_RequestInterface({
+                funcName: "stopAllPreview"
+            }).then(function (oData) {
+                showCBInfo(JSON.stringify(oData ? oData.responseMsg : ''));
+            });
+            //停止播放
+        }
+    };
+
+
+    //设置某节点高亮显示
+    function highLightTreeNodeById(id, h) {
+        var treeObj = $.fn.zTree.getZTreeObj("busVideo_tree");
+        var sNode = treeObj.getNodeByParam("id", id);
+        treeObj.setting.view.fontCss = { "color": "#000", "font-weight": "normal" };
+        if (h) {
+            //treeObj.setting.view.fontCss["color"] ="#ff0000";
+            treeObj.setting.view.fontCss = { "color": "#00aa76", "font-weight": "bold" };
+        }
+        if (sNode) {
+            treeObj.updateNode(sNode);
+        }
+    }
+
+    window.onbeforeunload = onclose;
+    function onclose() {
+
+    }
+</script>
+<script src="videoPlay.js"></script>

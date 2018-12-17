@@ -1,0 +1,79 @@
+/*
+ * metismenu - v2.1.0
+ * A jQuery menu plugin
+ * https://github.com/onokumus/metisMenu#readme
+ *
+ * Made by Osman Nuri Okumuş <onokumus@gmail.com> (https://github.com/onokumus)
+ * Under MIT License
+ */
+
+.metismenu .arrow{float:right;line-height:1.42857}[dir=rtl] .metismenu .arrow{float:left}.metismenu .glyphicon.arrow:before{content:"\e079"}.metismenu .active>a>.glyphicon.arrow:before{content:"\e114"}.metismenu .fa.arrow:before{content:"\f104"}.metismenu .active>a>.fa.arrow:before{content:"\f107"}.metismenu .ion.arrow:before{content:"\f3d2"}.metismenu .active>a>.ion.arrow:before{content:"\f3d0"}.metismenu .fa.plus-minus:before,.metismenu .fa.plus-times:before{content:"\f067"}.metismenu .plus-times{float:right}[dir=rtl] .metismenu .plus-times{float:left}.metismenu .active>a>.fa.plus-times{-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.metismenu .plus-minus{float:right}[dir=rtl] .metismenu .plus-minus{float:left}.metismenu .active>a>.fa.plus-minus:before{content:"\f068"}.metismenu .collapse{display:none}.metismenu .collapse.in{display:block}.metismenu .collapsing{position:relative;height:0;overflow:hidden;-webkit-transition-timing-function:ease;transition-timing-function:ease;-webkit-transition-duration:.35s;transition-duration:.35s;-webkit-transition-property:height,visibility;transition-property:height,visibility}
+.sidebar-nav {
+    background-image: -webkit-linear-gradient(left, color-stop(#2aa0dd 10px), color-stop(#2aa0dd 10px));
+    background-color: #2aa0dd; /*左边列表的背景颜色*/
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff2aa0dd', endColorstr='#ff2aa0dd', GradientType=1);
+}
+.sidebar-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.sidebar-nav a, .sidebar-nav a:hover, .sidebar-nav a:focus, .sidebar-nav a:active {
+    outline: none;
+}
+.sidebar-nav ul li, .sidebar-nav ul a {
+    display: block;
+}
+.sidebar-nav ul a {
+
+    padding: 10px 20px;
+    color: #fff;
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5) inset;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+}
+.sidebar-nav ul a:hover, .sidebar-nav ul a:focus, .sidebar-nav ul a:active {
+
+    color: #fff;
+    text-decoration: none;
+}
+.sidebar-nav ul ul a {
+    padding: 10px 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.sidebar-nav ul ul a:hover, .sidebar-nav ul ul a:focus, .sidebar-nav ul ul a:active {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+.sidebar-nav-item {
+    padding-left: 5px;
+}
+.sidebar-nav-item-icon {
+    padding-right: 5px;
+}
+#rtlh3 small {
+    transform: rotateY(180deg);
+    display: inline-block;
+}
+
+.sidebar-nav ul ul li:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+.sidebar-nav ul ul li:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.sidebar-nav ul ul a {
+    color:#000;
+    text-shadow:none;
+}
+.sidebar-nav>ul>li>a{
+    background-color: #2aa0dd;
+    background: -ms-linear-gradient(top, #2aa0dd,  #2aa0dd);
+    background: -webkit-linear-gradient(top, #2aa0dd,  #2aa0dd);
+}
+.sidebar-nav ul ul a:hover, .sidebar-nav ul ul a:focus, .sidebar-nav ul ul a:active {
+    color: #000;
+    text-decoration: none;
+}
+.sidebar-nav>ul>li{
+    margin-bottom: 3px;
+}
